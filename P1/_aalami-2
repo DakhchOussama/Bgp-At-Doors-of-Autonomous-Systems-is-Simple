@@ -1,0 +1,5 @@
+# i used a pre-built image as the subject suggest
+FROM frrouting/frr:v8.4.0
+COPY ./frr_daemons.conf /etc/frr/daemons.conf
+# owenership is given to frr (based on subject)
+RUN chown frr:frr /etc/frr/daemons.conf

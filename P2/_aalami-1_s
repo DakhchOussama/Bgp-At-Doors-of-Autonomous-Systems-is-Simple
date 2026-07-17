@@ -1,0 +1,30 @@
+# ============================================================
+# P2 - router 1 — STATIC VXLAN mode
+# Paste in the GNS3 console of router 1.
+# ============================================================
+
+# --- underlay: the real routed link between the two VTEPs ---
+ip addr add 10.1.1.1/24 dev eth0
+ip link set eth0 up
+
+# --- VXLAN interface -----------------------------------------
+# id 10        : VNI required by the subject
+# remote       : STATIC mode = the peer VTEP is hardcoded;
+#                all BUM traffic is unicast-forwarded to it
+ip link add vxlan10 type vxlan id 10 remote 10.1.1.2 dstport 4789 dev eth0
+ip link set vxlan10 up
+
+# --- bridge: glues the overlay together ----------------------
+# br0 switches frames between the local host port (eth1) and
+# the tunnel (vxlan10). The router does NO routing here: for
+# the overlay it is a plain L2 switch with a tunnel port.
+ip link add br0 type bridge
+ip link set br0 up
+ip link set eth1 up
+ip link set eth1 master br0
+ip link set vxlan10 master br0
+
+# --- verification --------------------------------------------
+# ip -d link show vxlan10      -> shows "vxlan id 10 remote 10.1.1.2"
+# bridge fdb show dev vxlan10  -> MAC table (fills after host pings)
+# bridge link                  -> both ports attached to br0

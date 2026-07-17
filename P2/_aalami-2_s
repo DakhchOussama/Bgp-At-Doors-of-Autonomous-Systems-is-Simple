@@ -1,0 +1,19 @@
+# ============================================================
+# P2 - router 2 — STATIC VXLAN mode
+# Mirror of router 1: only the IPs / remote are swapped.
+# ============================================================
+
+# underlay
+ip addr add 10.1.1.2/24 dev eth0
+ip link set eth0 up
+
+# VXLAN VNI 10, static peer = router 1
+ip link add vxlan10 type vxlan id 10 remote 10.1.1.1 dstport 4789 dev eth0
+ip link set vxlan10 up
+
+# bridge host port + tunnel
+ip link add br0 type bridge
+ip link set br0 up
+ip link set eth1 up
+ip link set eth1 master br0
+ip link set vxlan10 master br0
