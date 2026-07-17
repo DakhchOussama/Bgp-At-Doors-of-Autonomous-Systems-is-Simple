@@ -1,0 +1,10 @@
+FROM alpine:latest
+
+RUN apk update && apk add frr busybox
+
+COPY daemons /etc/frr/daemons
+
+COPY docker-start /usr/lib/frr/docker-start
+RUN chmod +x /usr/lib/frr/docker-start
+
+CMD ["/usr/lib/frr/docker-start"]

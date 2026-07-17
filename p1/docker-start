@@ -1,0 +1,13 @@
+#!/bin/sh
+
+mkdir -p /var/run/frr
+
+chown -R frr:frr /var/run/frr
+chown -R frr:frr /etc/frr
+
+/usr/lib/frr/zebra -d
+/usr/lib/frr/bgpd -d
+/usr/lib/frr/ospfd -d
+/usr/lib/frr/isisd -d
+
+tail -f /dev/null
