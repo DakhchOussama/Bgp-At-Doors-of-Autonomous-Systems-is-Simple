@@ -1,0 +1,4 @@
+FROM frrouting/frr:v8.4.0
+COPY ./frr_daemons.conf /etc/frr/daemons.conf
+
+RUN chown frr:frr /etc/frr/daemons.conf
