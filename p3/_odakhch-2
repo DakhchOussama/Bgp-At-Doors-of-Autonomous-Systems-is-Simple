@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# Assign IPs to Interfaces
+ip addr add 1.1.1.2/32 dev lo 2>/dev/null
+ip addr add 10.1.1.2/30 dev eth0 2>/dev/null
+
+# Configure OSPF inside FRRouting
+vtysh -c "
+configure terminal
+router ospf
+ ospf router-id 1.1.1.2
+ network 1.1.1.2/32 area 0
+ network 10.1.1.0/30 area 0
+exit
+"
