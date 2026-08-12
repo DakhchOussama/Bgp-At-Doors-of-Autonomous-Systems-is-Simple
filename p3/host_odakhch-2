@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# Assign IP to host 2 interface
+ip addr add 20.1.1.2/24 dev eth0 2>/dev/null || true

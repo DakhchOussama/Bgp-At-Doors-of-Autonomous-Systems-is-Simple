@@ -2,4 +2,5 @@
 FROM frrouting/frr:latest
 COPY ./frr_daemons.conf /etc/frr/daemons
 # owenership is given to frr (based on subject)
-RUN chown frr:frr /etc/frr/daemons
+RUN touch /etc/frr/vtysh.conf && \
+    chown -R frr:frr /etc/frr
