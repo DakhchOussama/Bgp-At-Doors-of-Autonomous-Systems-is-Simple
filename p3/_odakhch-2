@@ -4,12 +4,33 @@
 ip addr add 1.1.1.2/32 dev lo 2>/dev/null
 ip addr add 10.1.1.2/30 dev eth0 2>/dev/null
 
-# Configure OSPF inside FRRouting
+# 2. Configure VXLAN 10 and Bridge br0 (Linux Data Plane)
+ip link add br0 type bridge 2>/dev/null || true
+ip link set br0 up
+ip link set eth1 up
+ip link add vxlan10 type vxlan id 10 dstport 4789 local 1.1.1.2 nolearning 2>/dev/null || true
+ip link set vxlan10 up
+ip link set eth1 master br0
+ip link set vxlan10 master br0
+
+# 3. Configure OSPF & BGP EVPN inside FRRouting
 vtysh -c "
 configure terminal
+
 router ospf
  ospf router-id 1.1.1.2
  network 1.1.1.2/32 area 0
  network 10.1.1.0/30 area 0
+exit
+
+router bgp 1
+ bgp router-id 1.1.1.2
+ neighbor 1.1.1.1 remote-as 1
+ neighbor 1.1.1.1 update-source lo
+ !
+ address-family l2vpn evpn
+  neighbor 1.1.1.1 activate
+  advertise-all-vni
+ exit-address-family
 exit
 "
