@@ -1,6 +1,9 @@
 #!/bin/sh
 
-# Assign IPs to Interfaces
+# 1. Enable & Assign IPs to Interfaces
+ip link set eth0 up
+ip link set eth2 up
+
 ip addr add 1.1.1.4/32 dev lo 2>/dev/null
 ip addr add 10.1.1.10/30 dev eth2 2>/dev/null
 

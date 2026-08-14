@@ -1,10 +1,14 @@
 #!/bin/sh
 
-# Assign IPs to Interfaces
-ip addr add 1.1.1.1/32 dev lo
-ip addr add 10.1.1.1/30 dev eth0
-ip addr add 10.1.1.5/30 dev eth1
-ip addr add 10.1.1.9/30 dev eth2
+# 1. Enable & Assign IPs to Interfaces
+ip link set eth0 up
+ip link set eth1 up
+ip link set eth2 up
+
+ip addr add 1.1.1.1/32 dev lo 2>/dev/null || true
+ip addr add 10.1.1.1/30 dev eth0 2>/dev/null || true
+ip addr add 10.1.1.5/30 dev eth1 2>/dev/null || true
+ip addr add 10.1.1.9/30 dev eth2 2>/dev/null || true
 
 # 2. Configure OSPF & BGP EVPN (Route Reflector) inside FRRouting
 vtysh -c "
